@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Timer (8 PM to 8 PM)</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        #timer {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div id="timer">
+        <span id="day">Day 1</span> | 
+        <span id="date"></span> | 
+        <span id="time"></span>
+    </div>
+    <script>
+        function getStartTime() {
+            const now = new Date();
+            const startTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 20, 0, 0); // Set to 8 PM today
+            if (now > startTime) {
+                startTime.setDate(startTime.getDate() + 1); // If it's past 8 PM, set to 8 PM tomorrow
+            }
+            return startTime;
+        }
+
+        const startTime = getStartTime();
+        const endTime = new Date(startTime.getTime() + 24 * 60 * 60 * 1000); // 24 hours later
+
+        function updateTimer() {
+            const now = new Date();
+            
+            if (now < startTime) {
+                document.getElementById('timer').textContent = "Timer will start at 8 PM";
+                return;
+            }
+
+            if (now >= endTime) {
+                document.getElementById('timer').textContent = "Timer has ended";
+                return;
+            }
+
+            const dayElement = document.getElementById('day');
+            const dateElement = document.getElementById('date');
+            const timeElement = document.getElementById('time');
+            
+            dayElement.textContent = "Day 1";
+            dateElement.textContent = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            timeElement.textContent = now.toLocaleTimeString('en-US', { hour12: false });
+        }
+
+        // Update every second
+        setInterval(updateTimer, 1000);
+        // Initial call to display immediately
+        updateTimer();
+    </script>
+</body>
+</html>
